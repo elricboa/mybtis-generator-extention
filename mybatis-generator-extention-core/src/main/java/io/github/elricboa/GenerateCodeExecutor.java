@@ -3,13 +3,18 @@ package io.github.elricboa;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
 import org.apache.commons.lang.StringUtils;
+import org.mybatis.generator.api.MyBatisGenerator;
+import org.mybatis.generator.api.ProgressCallback;
 import org.mybatis.generator.config.*;
 import org.mybatis.generator.config.xml.ConfigurationParser;
+import org.mybatis.generator.exception.InvalidConfigurationException;
 import org.mybatis.generator.exception.XMLParserException;
+import org.mybatis.generator.internal.DefaultShellCallback;
 
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.sql.SQLException;
 import java.util.List;
 
 /**
@@ -30,8 +35,9 @@ public class GenerateCodeExecutor {
     private String mapperXmlFolder;
 
     private List<String> warnings = Lists.newArrayList();
+    private boolean overwrite;
 
-    public void execute() throws IOException, XMLParserException {
+    public void execute() throws IOException, XMLParserException, InvalidConfigurationException, SQLException, InterruptedException {
         URL generatorConfig = this.getClass().getClassLoader().getResource("generatorConfig.xml");
         Preconditions.checkNotNull(generatorConfig, "无法找到generator的配置文件,默认使用resources下的generatorConfig.xml文件");
         //  解析器
@@ -81,5 +87,10 @@ public class GenerateCodeExecutor {
             }
         }
 
+
+        DefaultShellCallback callback = new DefaultShellCallback(overwrite);
+        MyBatisGenerator myBatisGenerator = new MyBatisGenerator(configuration, callback, warnings);
+        ProgressCallback progressCallback = new GenerateFileProgressCallBack(myBatisGenerator);
+        myBatisGenerator.generate(progressCallback);
     }
 }
