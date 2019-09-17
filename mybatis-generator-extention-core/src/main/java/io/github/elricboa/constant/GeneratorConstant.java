@@ -12,4 +12,13 @@ public class GeneratorConstant {
     //  分页名称
     public static final String PAGE_OFFSET = "pageOffSet";
     public static final String PAGE_SIZENAME = "pageSize";
+    public static final String ROOT_CLASS_NAME = "rootClass";
+    //  接口名称
+    public static final String INTERFACE_NAME = "interfaceName";
+    //  根接口类的Key名称
+    public static final String ROOT_INTERFACE_NAME = "rootInterface";
+    //  实现方式状态名称
+    public static final String IMPLEMENT_PATTERN_STATUS_NAME = "implementPattern";
+    //  mapper文件名称
+    public static final String MAPPER_XML_NAME = "mapperXMLName";
 }
