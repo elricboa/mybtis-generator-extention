@@ -170,9 +170,7 @@ public class GenerateFileProgressCallBack implements ProgressCallback {
                     }
                 }
             }
-        } catch (NoSuchFieldException e) {
-            e.printStackTrace();
-        } catch (IllegalAccessException e) {
+        } catch (NoSuchFieldException | IllegalAccessException e) {
             e.printStackTrace();
         }
     }
