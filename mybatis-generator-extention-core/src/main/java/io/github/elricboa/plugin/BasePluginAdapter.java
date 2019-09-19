@@ -1,5 +1,9 @@
 package io.github.elricboa.plugin;
 
+import io.github.elricboa.constant.GeneratorConstant;
+import io.github.elricboa.enums.MethodEnum;
+import io.github.elricboa.util.MethodUtil;
+import io.github.elricboa.util.XmlUtil;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.MapUtils;
 import org.mybatis.generator.api.FullyQualifiedTable;
@@ -127,6 +131,53 @@ public class BasePluginAdapter extends PluginAdapter {
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
+    }
+
+    @Override
+    public boolean sqlMapDocumentGenerated(Document document,
+                                           IntrospectedTable introspectedTable) {
+
+        //  添加SQL标签
+        XmlUtil.changeExampleWhereClauseWithExample(document);
+
+        //  删除Update_By_Example_Where_Clause SQL标签
+        XmlUtil.removeUpdateByExampleWhereClause(document);
+
+        //  将 ResultMapWithBLOBs 属性 移动到 BaseResultMap
+//        XmlUtil.moveResultMapWithBLOBsToBaseResultMap(document);
+
+        List<XmlElement> elements = tableAndElementInfoList.get(introspectedTable.getFullyQualifiedTable());
+        if (CollectionUtils.isNotEmpty(elements)) {
+            for (XmlElement element : elements) {
+                document.getRootElement().addElement(element);
+            }
+
+            if (MapUtils.isNotEmpty(GeneratorConstant.existElementForMapperMap)) {
+
+                Iterator<Element> elementIterator = document.getRootElement().getElements().iterator();
+                while (elementIterator.hasNext()) {
+                    Element element = elementIterator.next();
+                    if (element instanceof XmlElement) {
+                        XmlElement xmlElement = (XmlElement) element;
+                        if (CollectionUtils.isNotEmpty(xmlElement.getAttributes())) {
+                            for (Attribute attribute : xmlElement.getAttributes()) {
+                                if ("id".equals(attribute.getName())) {
+                                    MethodEnum methodEnum = MethodEnum.getMethodEnumByName(attribute.getValue());
+                                    //  校验元素是否存在
+                                    boolean existElement = MethodUtil.checkExistMethodElement(introspectedTable, methodEnum);
+                                    //  已经存在不生成
+                                    if (existElement) {
+                                        elementIterator.remove();
+                                        break;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return true;
     }
 
     public Parameter createPageParameter() {

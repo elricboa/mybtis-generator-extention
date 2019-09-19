@@ -1,5 +1,7 @@
 package io.github.elricboa.constant;
 
+import java.util.Map;
+
 /**
  * @author shentongzhou on 2019-09-17
  */
@@ -21,4 +23,5 @@ public class GeneratorConstant {
     public static final String IMPLEMENT_PATTERN_STATUS_NAME = "implementPattern";
     //  mapper文件名称
     public static final String MAPPER_XML_NAME = "mapperXMLName";
+    public static Map existElementForMapperMap;
 }

@@ -102,4 +102,8 @@ public class MethodUtil {
         topLevelClass.getMethods().add(method);
         return topLevelClass;
     }
+
+    public static boolean checkExistMethodElement(IntrospectedTable introspectedTable, MethodEnum methodEnum) {
+        return false;
+    }
 }
