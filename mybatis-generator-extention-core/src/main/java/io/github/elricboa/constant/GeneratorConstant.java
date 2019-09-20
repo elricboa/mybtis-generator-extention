@@ -1,6 +1,10 @@
 package io.github.elricboa.constant;
 
+import io.github.elricboa.enums.MethodEnum;
+
+import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * @author shentongzhou on 2019-09-17
@@ -23,5 +27,6 @@ public class GeneratorConstant {
     public static final String IMPLEMENT_PATTERN_STATUS_NAME = "implementPattern";
     //  mapper文件名称
     public static final String MAPPER_XML_NAME = "mapperXMLName";
-    public static Map existElementForMapperMap;
+    //  key：文件前缀 同一小写  value mapper文件的元素名称列表
+    public static Map<String, Set<MethodEnum>> existElementForMapperMap = new HashMap<>();
 }

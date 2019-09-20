@@ -1,13 +1,16 @@
 package io.github.elricboa.util;
 
 import io.github.elricboa.constant.GeneratorConstant;
+import io.github.elricboa.enums.MethodEnum;
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang.StringUtils;
 import org.apache.ibatis.session.SqlSession;
 import org.mybatis.generator.api.IntrospectedTable;
 import org.mybatis.generator.api.dom.java.*;
 import org.mybatis.generator.config.Context;
 
 import java.util.Properties;
+import java.util.Set;
 
 /**
  * @author shentongzhou on 2019-09-17
@@ -103,7 +106,44 @@ public class MethodUtil {
         return topLevelClass;
     }
 
-    public static boolean checkExistMethodElement(IntrospectedTable introspectedTable, MethodEnum methodEnum) {
+    /**
+     * 检测mapper对应方法是否已经存在
+     *
+     * @param introspectedTable
+     * @return true 存在  false 不存在
+     */
+    public static boolean checkExistMethodElement(IntrospectedTable introspectedTable, MethodEnum sourceMethodEnum) {
+
+        String mapperXmlName = MethodUtil.getPropertyValueByName(introspectedTable, GeneratorConstant
+                .MAPPER_XML_NAME);
+        if (StringUtils.isNotBlank(mapperXmlName)) {
+            mapperXmlName = mapperXmlName.toLowerCase();
+        }
+
+        String domainObjectName = introspectedTable.getFullyQualifiedTable().getDomainObjectName();
+        String defaultMapperXmlName = (domainObjectName + "Mapper").toLowerCase();
+
+        if (GeneratorConstant.existElementForMapperMap.containsKey(mapperXmlName)) {
+
+            Set<MethodEnum> methodEnumSet = GeneratorConstant.existElementForMapperMap.get(mapperXmlName);
+
+            if (CollectionUtils.isNotEmpty(methodEnumSet)) {
+                if (methodEnumSet.contains(sourceMethodEnum)) {
+                    return true;
+                }
+            }
+        }
+
+        if (GeneratorConstant.existElementForMapperMap.containsKey(defaultMapperXmlName)) {
+
+            Set<MethodEnum> methodEnumSet = GeneratorConstant.existElementForMapperMap.get(defaultMapperXmlName);
+
+            if (CollectionUtils.isNotEmpty(methodEnumSet)) {
+                if (methodEnumSet.contains(sourceMethodEnum)) {
+                    return true;
+                }
+            }
+        }
         return false;
     }
 }
