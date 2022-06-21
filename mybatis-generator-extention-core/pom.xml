@@ -12,7 +12,7 @@
         <spring-version>4.1.1.RELEASE</spring-version>
         <mybatis.version>3.2.8</mybatis.version>
         <mybatis.spring.version>1.2.2</mybatis.spring.version>
-        <mysql.version>5.1.16</mysql.version>
+        <mysql.version>8.0.28</mysql.version>
         <guava.version>18.0</guava.version>
         <joda-time.version>2.5</joda-time.version>
         <aspectj.version>1.8.4</aspectj.version>
